@@ -115,6 +115,16 @@ begin
     'Tu run comienza antes de entrar a la arena.'
   );
 
+  ExtractTemporaryFile('wizard-welcome.bmp');
+  ExtractTemporaryFile('wizard-briefing.bmp');
+  ExtractTemporaryFile('wizard-install.bmp');
+  ExtractTemporaryFile('wizard-finish.bmp');
+
+  WizardWelcomeArt := ExpandConstant('{tmp}\wizard-welcome.bmp');
+  WizardBriefingArt := ExpandConstant('{tmp}\wizard-briefing.bmp');
+  WizardInstallArt := ExpandConstant('{tmp}\wizard-install.bmp');
+  WizardFinishArt := ExpandConstant('{tmp}\wizard-finish.bmp');
+
   LoreBackground := TBitmapImage.Create(LorePage);
   LoreBackground.Parent := LorePage.Surface;
   LoreBackground.Left := 0;
@@ -123,7 +133,7 @@ begin
   LoreBackground.Height := LorePage.SurfaceHeight;
   LoreBackground.Stretch := True;
   LoreBackground.Anchors := [akLeft, akTop, akRight, akBottom];
-  LoreBackground.Bitmap.LoadFromFile(ExpandConstant('{tmp}\wizard-briefing.bmp'));
+  LoreBackground.Bitmap.LoadFromFile(WizardBriefingArt);
 
   LoreText := TNewStaticText.Create(LorePage);
   LoreText.Parent := LorePage.Surface;
@@ -153,16 +163,6 @@ begin
   LoreHint.Font.Color := $00FFF95C;
   LoreHint.Caption :=
     'Build Prototype: instala primero y luego abre BOT BREAKER 3D desde el acceso directo.';
-
-  ExtractTemporaryFile('wizard-welcome.bmp');
-  ExtractTemporaryFile('wizard-briefing.bmp');
-  ExtractTemporaryFile('wizard-install.bmp');
-  ExtractTemporaryFile('wizard-finish.bmp');
-
-  WizardWelcomeArt := ExpandConstant('{tmp}\wizard-welcome.bmp');
-  WizardBriefingArt := ExpandConstant('{tmp}\wizard-briefing.bmp');
-  WizardInstallArt := ExpandConstant('{tmp}\wizard-install.bmp');
-  WizardFinishArt := ExpandConstant('{tmp}\wizard-finish.bmp');
 
   UpdateWizardArt(wpWelcome);
 end;
