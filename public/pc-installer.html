@@ -104,7 +104,11 @@
       </p>
 
       <div class="actions">
-        <a id="download-setup" class="btn primary" href="/installer-output/BotBreakerSetup.exe" download>
+        <a
+          id="download-setup"
+          class="btn primary"
+          href="https://github.com/MiniBeta832/shooter/releases/latest/download/BotBreakerSetup.exe"
+        >
           Descargar Setup.exe
         </a>
         <a
@@ -117,7 +121,7 @@
         </a>
         <a class="btn" href="/">Volver al juego</a>
       </div>
-      <p id="installer-status" class="status">Verificando instalador...</p>
+      <p id="installer-status" class="status">Descarga directa desde GitHub Releases.</p>
 
       <ol>
         <li>Descarga <code>BotBreakerSetup.exe</code>.</li>
@@ -131,45 +135,6 @@
         <code>crear-setup-pc.bat</code>.
       </p>
     </main>
-    <script>
-      (async () => {
-        const statusEl = document.getElementById("installer-status");
-        const downloadBtn = document.getElementById("download-setup");
-        const setupUrl = "/installer-output/BotBreakerSetup.exe";
-
-        function setMissingStatus(message) {
-          statusEl.textContent = message;
-          statusEl.classList.remove("ready");
-          statusEl.classList.add("missing");
-          downloadBtn.setAttribute("aria-disabled", "true");
-          downloadBtn.removeAttribute("href");
-        }
-
-        try {
-          const response = await fetch(setupUrl, { cache: "no-store" });
-          if (!response.ok) {
-            setMissingStatus("No hay setup generado todavia. Ejecuta crear-setup-pc.bat.");
-            return;
-          }
-
-          const bytes = new Uint8Array(await response.arrayBuffer());
-          const isExe = bytes.length > 2 && bytes[0] === 0x4d && bytes[1] === 0x5a;
-          if (!isExe) {
-            setMissingStatus(
-              "El setup aun no existe o el servidor devolvio una pagina HTML. Genera el setup con crear-setup-pc.bat.",
-            );
-            return;
-          }
-
-          statusEl.textContent = "Setup detectado. Descarga segura lista.";
-          statusEl.classList.remove("missing");
-          statusEl.classList.add("ready");
-          downloadBtn.setAttribute("href", setupUrl);
-          downloadBtn.removeAttribute("aria-disabled");
-        } catch (error) {
-          setMissingStatus("No se pudo validar el setup. Intenta recargar esta pagina.");
-        }
-      })();
-    </script>
+    <script></script>
   </body>
 </html>
