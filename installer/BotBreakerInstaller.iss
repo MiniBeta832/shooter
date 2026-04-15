@@ -52,6 +52,7 @@ Filename: "{app}\{#AppExeName}"; Description: "Abrir Bot Breaker 3D"; Flags: now
 [Code]
 var
   LorePage: TWizardPage;
+  LoreBackground: TBitmapImage;
   LoreText: TNewStaticText;
   LoreHint: TNewStaticText;
   WizardWelcomeArt: string;
@@ -113,7 +114,16 @@ begin
     'Briefing de despliegue',
     'Tu run comienza antes de entrar a la arena.'
   );
-  LorePage.Surface.Color := $00120A05;
+
+  LoreBackground := TBitmapImage.Create(LorePage);
+  LoreBackground.Parent := LorePage.Surface;
+  LoreBackground.Left := 0;
+  LoreBackground.Top := 0;
+  LoreBackground.Width := LorePage.SurfaceWidth;
+  LoreBackground.Height := LorePage.SurfaceHeight;
+  LoreBackground.Stretch := True;
+  LoreBackground.Anchors := [akLeft, akTop, akRight, akBottom];
+  LoreBackground.Bitmap.LoadFromFile(ExpandConstant('{tmp}\wizard-briefing.bmp'));
 
   LoreText := TNewStaticText.Create(LorePage);
   LoreText.Parent := LorePage.Surface;
