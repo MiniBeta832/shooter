@@ -14,7 +14,11 @@ function New-GradientBrush {
 }
 
 function New-WizardLargeImage {
-  param([string]$Path)
+  param(
+    [string]$Path,
+    [string]$PhaseTitle = "PROTOTYPE BUILD",
+    [string]$PhaseSubtitle = "TACTICAL WIZARD"
+  )
 
   $width = 164
   $height = 314
@@ -49,8 +53,8 @@ function New-WizardLargeImage {
     $g.DrawString("BOT", $titleFont, $titleBrush, 12, 86)
     $g.DrawString("BREAKER", $titleFont, $titleBrush, 12, 120)
     $g.DrawString("3D", $titleFont, $accentBrush, 12, 156)
-    $g.DrawString("PROTOTYPE BUILD", $subFont, $subBrush, 12, 196)
-    $g.DrawString("TACTICAL WIZARD", $subFont, $subBrush, 12, 214)
+    $g.DrawString($PhaseTitle.ToUpperInvariant(), $subFont, $subBrush, 12, 196)
+    $g.DrawString($PhaseSubtitle.ToUpperInvariant(), $subFont, $subBrush, 12, 214)
 
     $titleFont.Dispose()
     $subFont.Dispose()
@@ -109,11 +113,23 @@ if (!(Test-Path $OutputDir)) {
 }
 
 $largePath = Join-Path $OutputDir "wizard-large.bmp"
+$welcomePath = Join-Path $OutputDir "wizard-welcome.bmp"
+$briefingPath = Join-Path $OutputDir "wizard-briefing.bmp"
+$installPath = Join-Path $OutputDir "wizard-install.bmp"
+$finishPath = Join-Path $OutputDir "wizard-finish.bmp"
 $smallPath = Join-Path $OutputDir "wizard-small.bmp"
 
-New-WizardLargeImage -Path $largePath
+New-WizardLargeImage -Path $largePath -PhaseTitle "Prototype Build" -PhaseSubtitle "Welcome Sequence"
+New-WizardLargeImage -Path $welcomePath -PhaseTitle "Prototype Build" -PhaseSubtitle "Welcome Sequence"
+New-WizardLargeImage -Path $briefingPath -PhaseTitle "Combat Briefing" -PhaseSubtitle "Mission Overview"
+New-WizardLargeImage -Path $installPath -PhaseTitle "Deploying Build" -PhaseSubtitle "Installing Arena"
+New-WizardLargeImage -Path $finishPath -PhaseTitle "System Online" -PhaseSubtitle "Ready To Fight"
 New-WizardSmallImage -Path $smallPath
 
 Write-Output "Assets generados:"
 Write-Output $largePath
+Write-Output $welcomePath
+Write-Output $briefingPath
+Write-Output $installPath
+Write-Output $finishPath
 Write-Output $smallPath
