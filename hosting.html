@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071224" />
+    <title>Launchpad Cloud</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-0: #030912;
+        --bg-1: #071224;
+        --bg-2: #0b1c35;
+        --panel: rgba(9, 22, 40, 0.7);
+        --panel-border: rgba(128, 203, 255, 0.24);
+        --text: #edf6ff;
+        --muted: #9fb5cf;
+        --accent: #4ee9d6;
+        --accent-2: #7bd8ff;
+        --ok: #71ffaf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family: "Sora", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 84% 8%, rgba(78, 233, 214, 0.18), transparent 28%),
+          radial-gradient(circle at 10% 90%, rgba(123, 216, 255, 0.14), transparent 34%),
+          linear-gradient(150deg, var(--bg-2), var(--bg-1) 48%, var(--bg-0));
+      }
+
+      .shell {
+        width: min(1140px, calc(100vw - 32px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        position: sticky;
+        top: 10px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(4, 14, 28, 0.75);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(10px);
+      }
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .tag {
+        font-size: 0.78rem;
+        color: #032325;
+        background: linear-gradient(135deg, var(--accent), var(--ok));
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-weight: 700;
+      }
+
+      .hero {
+        padding: 74px 0 36px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 24px;
+        align-items: center;
+      }
+
+      .kicker {
+        margin: 0 0 14px;
+        color: var(--accent);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 6vw, 4rem);
+        line-height: 1.02;
+        text-wrap: balance;
+      }
+
+      .lead {
+        margin: 16px 0 0;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 60ch;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 16px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn--primary {
+        color: #041016;
+        background: linear-gradient(135deg, var(--accent), #9dfff4);
+      }
+
+      .btn--ghost {
+        color: var(--text);
+        border: 1px solid var(--panel-border);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .terminal {
+        border-radius: 18px;
+        border: 1px solid var(--panel-border);
+        background: linear-gradient(165deg, rgba(9, 24, 45, 0.9), rgba(5, 13, 26, 0.92));
+        box-shadow: 0 26px 44px rgba(0, 0, 0, 0.34);
+        overflow: hidden;
+      }
+
+      .terminal__top {
+        display: flex;
+        gap: 7px;
+        padding: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+      }
+
+      .dot:nth-child(1) {
+        background: #ff7f7f;
+      }
+      .dot:nth-child(2) {
+        background: #ffd27f;
+      }
+      .dot:nth-child(3) {
+        background: #7fffbe;
+      }
+
+      .terminal pre {
+        margin: 0;
+        padding: 16px;
+        color: #b8f6e2;
+        line-height: 1.5;
+        font-size: 0.9rem;
+        overflow-x: auto;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0 10px;
+      }
+
+      .card {
+        border-radius: 16px;
+        border: 1px solid var(--panel-border);
+        background: var(--panel);
+        padding: 16px;
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 1.05rem;
+      }
+
+      .card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      .flow {
+        margin: 22px 0;
+        padding: 20px;
+        border-radius: 18px;
+        border: 1px solid var(--panel-border);
+        background: linear-gradient(165deg, rgba(8, 20, 37, 0.8), rgba(5, 13, 24, 0.9));
+      }
+
+      .flow h2 {
+        margin: 0 0 12px;
+        font-size: 1.4rem;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .step {
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        padding: 12px;
+      }
+
+      .step b {
+        color: var(--accent-2);
+      }
+
+      .pricing {
+        margin: 22px 0 70px;
+        border-radius: 22px;
+        border: 1px solid rgba(113, 255, 175, 0.36);
+        background: linear-gradient(150deg, rgba(10, 30, 36, 0.8), rgba(6, 20, 28, 0.92));
+        padding: 22px;
+      }
+
+      .pricing h2 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
+      .price {
+        margin-top: 8px;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 800;
+        color: var(--ok);
+      }
+
+      .small {
+        color: var(--muted);
+        margin-top: 8px;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 960px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 38px;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .steps {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .steps {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="nav">
+        <div class="brand">Launchpad Cloud</div>
+        <div class="tag">Sin créditos</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="kicker">Hosting estilo Netlify</p>
+          <h1>Deploy web instantáneo, sin usar créditos.</h1>
+          <p class="lead">
+            Sube tu proyecto, conecta tu repo y publica en segundos con SSL, preview links y rollback automático.
+            Todo en un dashboard limpio y simple.
+          </p>
+          <div class="actions">
+            <button class="btn btn--primary">Comenzar gratis</button>
+            <button class="btn btn--ghost">Ver demo</button>
+          </div>
+        </div>
+
+        <article class="terminal">
+          <div class="terminal__top">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <pre>$ git push origin main
+Deploy detected...
+Build complete in 24.7s
+Preview: https://myapp-preview.launchpad.app
+Production: https://myapp.launchpad.app
+Status: ✅ online</pre>
+        </article>
+      </section>
+
+      <section class="cards">
+        <article class="card">
+          <h3>Deploy Automático</h3>
+          <p>Cada push crea una preview URL para revisar cambios antes de publicar.</p>
+        </article>
+        <article class="card">
+          <h3>Dominio + SSL</h3>
+          <p>Conecta tu dominio custom y activa HTTPS con un click, sin config compleja.</p>
+        </article>
+        <article class="card">
+          <h3>Rollback Rápido</h3>
+          <p>Si algo falla, vuelve a una versión anterior en segundos desde el panel.</p>
+        </article>
+      </section>
+
+      <section class="flow">
+        <h2>Workflow rápido</h2>
+        <div class="steps">
+          <div class="step"><b>1.</b> Importa repo desde GitHub/GitLab.</div>
+          <div class="step"><b>2.</b> Detectamos framework y build command.</div>
+          <div class="step"><b>3.</b> Preview link por cada commit.</div>
+          <div class="step"><b>4.</b> Publica a producción sin downtime.</div>
+        </div>
+      </section>
+
+      <section class="pricing">
+        <h2>Plan único</h2>
+        <div class="price">$0 / mes</div>
+        <p class="small">
+          Sin sistema de créditos. Sin recargas. Sin sorpresas.<br />
+          Deploys ilimitados para proyectos personales y prototipos.
+        </p>
+      </section>
+    </div>
+  </body>
+</html>

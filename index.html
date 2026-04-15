@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="es" translate="yes">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta name="theme-color" content="#08101f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Bot Breaker 3D</title>
+  </head>
+  <body translate="yes">
+    <div id="app" translate="yes">
+      <aside class="hud">
+        <div class="hud__brand">
+          <p class="hud__eyebrow">Offline Arena Shooter</p>
+          <h1>Bot Breaker 3D</h1>
+          <p class="hud__mode">
+            Dificultad
+            <strong id="difficulty-label">Normal</strong>
+          </p>
+        </div>
+
+        <div class="hud__stats">
+          <div class="hud-card">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="hud-card">
+            <span>Wave</span>
+            <strong id="wave">W-1</strong>
+          </div>
+          <div class="hud-card">
+            <span>Enemies</span>
+            <strong id="enemies">0</strong>
+          </div>
+          <div class="hud-card">
+            <span>Coins</span>
+            <strong id="coins">0</strong>
+          </div>
+        </div>
+
+        <div class="health">
+          <div class="health__label">
+            <span>Shield</span>
+            <strong id="health-value">100</strong>
+          </div>
+          <div class="health__bar">
+            <div id="health-fill" class="health__fill"></div>
+          </div>
+        </div>
+
+        <div class="hud__tips">
+          <p><kbd>WASD</kbd> moverse</p>
+          <p><kbd>Espacio</kbd> saltar</p>
+          <p><kbd>Mouse</kbd> apuntar</p>
+          <p><kbd>Click</kbd> disparar</p>
+          <p><kbd>R</kbd> reiniciar run</p>
+          <p><kbd>P</kbd> captura</p>
+        </div>
+      </aside>
+
+      <div id="crosshair" class="crosshair" aria-hidden="true"></div>
+
+      <section id="boss-panel" class="boss-panel" hidden>
+        <div class="boss-panel__label">
+          <span id="boss-name">Boss</span>
+          <strong id="boss-health-value">0 / 0</strong>
+        </div>
+        <div class="boss-panel__shield-label">
+          <span>Escudo</span>
+          <strong id="boss-shield-value">0 / 0</strong>
+        </div>
+        <div class="boss-panel__shield-bar">
+          <div id="boss-shield-fill" class="boss-panel__shield-fill"></div>
+        </div>
+        <div class="boss-panel__bar">
+          <div id="boss-health-fill" class="boss-panel__fill"></div>
+        </div>
+      </section>
+
+      <section id="ally-panel" class="ally-panel" hidden>
+        <p class="ally-panel__title">Aliados</p>
+        <div id="ally-list" class="ally-list"></div>
+      </section>
+
+      <section id="wave-reveal-alert" class="wave-reveal-alert" hidden>
+        the wave is taking long all the enemies ubications have been revealed
+      </section>
+
+      <section id="merchant-dialogue" class="merchant-dialogue" hidden>
+        <p id="merchant-dialogue-text"></p>
+      </section>
+
+      <section id="cutscene-subtitle" class="cutscene-subtitle" hidden>
+        <p id="cutscene-subtitle-text"></p>
+      </section>
+
+      <section id="overlay" class="overlay overlay--visible">
+        <div class="overlay__panel">
+          <p class="overlay__eyebrow">Prototype Build</p>
+          <h2 id="overlay-title">Bot Breaker 3D</h2>
+          <p id="overlay-copy">
+            Entra a la arena, sobrevive a las oleadas y destruye a los bots
+            enemigos.
+          </p>
+          <div class="overlay__actions">
+            <button id="overlay-button" class="overlay__button" type="button">
+              Entrar al combate
+            </button>
+            <button
+              id="overlay-skip-cycle"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+              hidden
+            >
+              Saltar ciclo
+            </button>
+            <button
+              id="overlay-dev-shop"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+              hidden
+            >
+              Ir a la tienda
+            </button>
+            <button
+              id="overlay-credits"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+              hidden
+            >
+              Creditos
+            </button>
+            <button
+              id="overlay-install-pc"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+            >
+              Instalar en PC
+            </button>
+            <button
+              id="settings-toggle"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+            >
+              Configuracion
+            </button>
+            <button
+              id="allies-toggle"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+              hidden
+            >
+              Aliados
+            </button>
+            <button
+              id="overlay-install"
+              class="overlay__button overlay__button--ghost"
+              type="button"
+              hidden
+            >
+              Instalar juego
+            </button>
+          </div>
+
+          <section id="world-panel" class="world-panel">
+            <div class="world-panel__header">
+              <div>
+                <p class="overlay__eyebrow">Seleccion de mundo</p>
+                <h3>Rutas desbloqueadas</h3>
+              </div>
+              <p id="world-progress" class="world-panel__progress">1 / 8 mundos</p>
+            </div>
+
+            <div class="world-options-scroll">
+              <div class="world-options">
+                <button class="world-option" type="button" data-world="arena">
+                  <span class="world-option__tag">Mundo 1</span>
+                  <strong>The Scrapyard</strong>
+                  <span class="world-option__status">
+                    Disponible desde el inicio.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="rift">
+                  <span class="world-option__tag">Mundo 2</span>
+                  <strong>Sector Rift</strong>
+                  <span class="world-option__status">
+                    Cruza el portal del ciclo 5 para desbloquearlo.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="forge">
+                  <span class="world-option__tag">Mundo 3</span>
+                  <strong>Ashen Forge</strong>
+                  <span class="world-option__status">
+                    Sobrevive hasta el ciclo 9 para desbloquearlo.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="vault">
+                  <span class="world-option__tag">Mundo 4</span>
+                  <strong>Frozen Vault</strong>
+                  <span class="world-option__status">
+                    Llega al ciclo 13 para desbloquearlo.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="neon">
+                  <span class="world-option__tag">Mundo 5</span>
+                  <strong>Neon Wastes</strong>
+                  <span class="world-option__status">
+                    Abre la ruta del ciclo 17 para desbloquearlo.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="biograve">
+                  <span class="world-option__tag">Mundo 6</span>
+                  <strong>Bio Grave</strong>
+                  <span class="world-option__status">
+                    Supera Neon Wastes hasta el ciclo 21.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="citadel">
+                  <span class="world-option__tag">Mundo 7</span>
+                  <strong>Void Citadel</strong>
+                  <span class="world-option__status">
+                    Resiste hasta el ciclo 25 para desbloquearlo.
+                  </span>
+                </button>
+
+                <button class="world-option" type="button" data-world="helltrack">
+                  <span class="world-option__tag">Mundo 8</span>
+                  <strong>Hell Track</strong>
+                  <span class="world-option__status">
+                    Cruza Void Citadel y alcanza el ciclo 29.
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <p id="world-help" class="world-panel__help">
+              El boton principal abre una run nueva en el mundo marcado.
+            </p>
+          </section>
+
+          <section id="settings-panel" class="settings-panel" hidden>
+            <div class="settings-panel__header">
+              <div>
+                <p class="overlay__eyebrow">Ajustes</p>
+                <h3>Configuracion de la partida</h3>
+              </div>
+              <button
+                id="settings-close"
+                class="overlay__icon-button"
+                type="button"
+                aria-label="Cerrar configuracion"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div class="settings-panel__scroll">
+              <div class="setting-group">
+                <p class="setting-group__label">Dificultad</p>
+                <div class="difficulty-options">
+                  <button
+                    class="difficulty-option"
+                    type="button"
+                    data-difficulty="easy"
+                  >
+                    Facil
+                  </button>
+                  <button
+                    class="difficulty-option"
+                    type="button"
+                    data-difficulty="normal"
+                  >
+                    Normal
+                  </button>
+                  <button
+                    class="difficulty-option"
+                    type="button"
+                    data-difficulty="hard"
+                  >
+                    Dificil
+                  </button>
+                </div>
+                <p id="difficulty-help" class="setting-group__help">
+                  Balanceado para la experiencia base.
+                </p>
+                <div class="difficulty-options">
+                  <button
+                    id="translate-toggle"
+                    class="difficulty-option"
+                    type="button"
+                  >
+                    Idioma: Espanol
+                  </button>
+                </div>
+                <p id="translate-help" class="setting-group__help">
+                  Cambia la interfaz principal entre Espanol e Ingles.
+                </p>
+                <div class="difficulty-options">
+                  <button
+                    id="persistent-upgrades-toggle"
+                    class="difficulty-option"
+                    type="button"
+                  >
+                    Mejoras persistentes: desactivadas
+                  </button>
+                </div>
+                <p id="persistent-upgrades-help" class="setting-group__help">
+                  Decide si las mejoras se mantienen cuando pierdes una run.
+                </p>
+              </div>
+
+              <div id="dev-group" class="setting-group" hidden>
+                <p class="setting-group__label">Modo dev</p>
+                <div class="difficulty-options">
+                  <button
+                    id="dev-toggle"
+                    class="difficulty-option"
+                    type="button"
+                  >
+                    Modo dev: desactivado
+                  </button>
+                </div>
+                <p id="dev-help" class="setting-group__help">
+                  Solo disponible en la PC autorizada.
+                </p>
+                <div class="dev-tools">
+                  <div class="dev-tools__row">
+                    <select id="dev-spawn-type" class="dev-select"></select>
+                    <input
+                      id="dev-spawn-count"
+                      class="dev-input"
+                      type="number"
+                      min="1"
+                      max="12"
+                      value="3"
+                    />
+                    <button
+                      id="dev-spawn-button"
+                      class="difficulty-option"
+                      type="button"
+                    >
+                      Spawnear
+                    </button>
+                  </div>
+                  <div class="dev-tools__row">
+                    <input
+                      id="dev-wave-input"
+                      class="dev-input"
+                      type="number"
+                      min="0"
+                      max="10"
+                      value="0"
+                    />
+                    <button
+                      id="dev-wave-button"
+                      class="difficulty-option"
+                      type="button"
+                    >
+                      Ir a wave
+                    </button>
+                  </div>
+                  <div class="dev-tools__row">
+                    <button
+                      id="dev-oneshot-toggle"
+                      class="difficulty-option"
+                      type="button"
+                    >
+                      One shot: desactivado
+                    </button>
+                    <button
+                      id="dev-infinite-health-toggle"
+                      class="difficulty-option"
+                      type="button"
+                    >
+                      Vida infinita: activada
+                    </button>
+                  </div>
+                  <div class="dev-tools__row">
+                    <select id="dev-upgrade-select" class="dev-select"></select>
+                    <button
+                      id="dev-upgrade-button"
+                      class="difficulty-option"
+                      type="button"
+                    >
+                      Aplicar mejora
+                    </button>
+                  </div>
+                  <p id="dev-tools-help" class="setting-group__help">
+                    Usa esto para spawnear enemigos o saltar directo a una wave.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="allies-settings-panel" class="settings-panel allies-settings-panel" hidden>
+            <div class="settings-panel__header">
+              <div>
+                <p class="overlay__eyebrow">Aliados</p>
+                <h3>Aliados desbloqueables</h3>
+              </div>
+              <button
+                id="allies-settings-close"
+                class="overlay__icon-button"
+                type="button"
+                aria-label="Cerrar menu de aliados"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div class="settings-panel__scroll">
+              <p id="allies-settings-help" class="setting-group__help">
+                Desbloquea aliados con monedas y equipalos para la run.
+              </p>
+              <div id="allies-settings-list" class="allies-settings-list"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="shop-hud" class="shop-hud" hidden>
+        <div class="shop-hud__bar">
+          <div class="shop-chip">
+            Monedas
+            <strong id="shop-coins">0</strong>
+          </div>
+          <div class="shop-chip">
+            Reinicio
+            <strong id="rest-timer">0s</strong>
+          </div>
+        </div>
+
+        <p id="shop-message" class="shop-hud__message">
+          Pasa el mouse sobre una mejora y haz click para comprarla.
+        </p>
+
+        <div class="shop-hud__actions">
+          <button id="shop-continue" class="shop-hud__button" type="button">
+            Volver al combate
+          </button>
+        </div>
+      </section>
+
+      <section id="shop-tooltip" class="shop-tooltip" hidden>
+        <p class="shop-tooltip__eyebrow">Mejora</p>
+        <h3 id="shop-tooltip-title">Nombre</h3>
+        <p id="shop-tooltip-desc" class="shop-tooltip__desc"></p>
+        <p id="shop-tooltip-meta" class="shop-tooltip__meta"></p>
+      </section>
+
+      <section id="transition-screen" class="transition-screen" hidden>
+        <div class="transition-screen__content">
+          <p id="transition-screen-title" class="transition-screen__title"></p>
+          <p id="transition-screen-copy" class="transition-screen__copy"></p>
+        </div>
+      </section>
+
+      <section id="static-screen" class="static-screen" hidden></section>
+      <section id="white-screen" class="white-screen" hidden></section>
+
+      <section id="credits-screen" class="credits-screen" hidden>
+        <div class="credits-screen__panel">
+          <p class="credits-screen__eyebrow">Final Credits</p>
+          <h2>BOT BREAKER 3D</h2>
+          <p class="credits-screen__line">Creado por: <strong>betar</strong> + <strong>Codex</strong></p>
+          <div class="credits-screen__showcase">
+            <p class="credits-screen__label">Boss Spotlight</p>
+            <div id="credits-boss-orb" class="credits-screen__orb"></div>
+            <h3 id="credits-boss-name" class="credits-screen__boss-name">Aegis Prime</h3>
+            <p id="credits-boss-credit" class="credits-screen__boss-credit">Modelo por betar + Codex</p>
+          </div>
+          <p id="credits-seq-text" class="credits-screen__seq-text">Presentando a todos los bosses...</p>
+        </div>
+      </section>
+
+      <section id="trailer-title-screen" class="trailer-title-screen" hidden>
+        <h2>BOT BREAKER 3D 2</h2>
+        <p>coming soon</p>
+      </section>
+
+      <section id="pause-flash" class="pause-flash" aria-hidden="true"></section>
+
+      <section id="mobile-controls" class="mobile-controls" hidden>
+        <div id="mobile-look-zone" class="mobile-look-zone" aria-hidden="true"></div>
+
+        <div id="mobile-joystick" class="mobile-joystick" aria-hidden="true">
+          <div class="mobile-joystick__base"></div>
+          <div id="mobile-joystick-thumb" class="mobile-joystick__thumb"></div>
+        </div>
+
+        <button id="mobile-fire" class="mobile-action mobile-action--fire" type="button">
+          FIRE
+        </button>
+        <button id="mobile-jump" class="mobile-action mobile-action--jump" type="button">
+          JUMP
+        </button>
+        <button
+          id="mobile-pause"
+          class="mobile-action mobile-action--pause"
+          type="button"
+          aria-label="Pausar juego"
+        >
+          PAUSE
+        </button>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

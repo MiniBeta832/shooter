@@ -1,0 +1,21 @@
+node_modules/
+dist/
+
+# Build and installer outputs
+public/installer-output/*.exe
+public/installer-output/*.zip
+public/installer-output/portable/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/

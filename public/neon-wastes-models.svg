@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#050912"/>
+      <stop offset="100%" stop-color="#0a1322"/>
+    </linearGradient>
+    <linearGradient id="neonCyan" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#25ffd7"/>
+      <stop offset="100%" stop-color="#5cf2ff"/>
+    </linearGradient>
+    <linearGradient id="neonAmber" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#ffa41b"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1400" height="800" fill="url(#bg)"/>
+  <rect x="60" y="60" width="1280" height="680" rx="28" fill="#0b1220" stroke="#1b2b44" stroke-width="2"/>
+
+  <text x="120" y="130" fill="#bfe9ff" font-family="Impact, Arial Black, sans-serif" font-size="48" letter-spacing="2">NEON WASTES</text>
+  <text x="120" y="170" fill="#7aa7ff" font-family="Arial, sans-serif" font-size="18" letter-spacing="2">MODEL SHEET</text>
+
+  <!-- Neon Runner -->
+  <g transform="translate(140 230)">
+    <rect x="0" y="0" width="340" height="420" rx="24" fill="#0f1a2a" stroke="#1f3557" stroke-width="2"/>
+    <text x="26" y="42" fill="#25ffd7" font-family="Arial, sans-serif" font-size="20" letter-spacing="2">NEON RUNNER</text>
+    <g transform="translate(80 110)">
+      <rect x="40" y="120" width="120" height="60" rx="10" fill="#111a26"/>
+      <circle cx="100" cy="150" r="16" fill="url(#neonCyan)"/>
+      <rect x="20" y="120" width="16" height="80" rx="8" fill="url(#neonCyan)" transform="rotate(-25 28 120)"/>
+      <rect x="164" y="120" width="16" height="80" rx="8" fill="url(#neonCyan)" transform="rotate(25 172 120)"/>
+      <rect x="94" y="64" width="12" height="70" fill="url(#neonCyan)"/>
+    </g>
+  </g>
+
+  <!-- Neon Caster -->
+  <g transform="translate(530 230)">
+    <rect x="0" y="0" width="340" height="420" rx="24" fill="#0f1a2a" stroke="#1f3557" stroke-width="2"/>
+    <text x="26" y="42" fill="#ffa41b" font-family="Arial, sans-serif" font-size="20" letter-spacing="2">NEON CASTER</text>
+    <g transform="translate(80 90)">
+      <rect x="70" y="120" width="120" height="180" rx="18" fill="#111a26"/>
+      <circle cx="130" cy="130" r="22" fill="url(#neonAmber)"/>
+      <circle cx="130" cy="130" r="48" fill="none" stroke="url(#neonAmber)" stroke-width="8"/>
+      <rect x="120" y="40" width="20" height="80" fill="#111a26"/>
+      <rect x="124" y="40" width="12" height="70" fill="url(#neonAmber)"/>
+    </g>
+  </g>
+
+  <!-- Neon Wraith (Boss) -->
+  <g transform="translate(920 230)">
+    <rect x="0" y="0" width="340" height="420" rx="24" fill="#0f1a2a" stroke="#1f3557" stroke-width="2"/>
+    <text x="26" y="42" fill="#25ffd7" font-family="Arial, sans-serif" font-size="20" letter-spacing="2">NEON WRAITH</text>
+    <text x="26" y="66" fill="#7aa7ff" font-family="Arial, sans-serif" font-size="12" letter-spacing="2">BOSS</text>
+    <g transform="translate(60 90)">
+      <ellipse cx="110" cy="190" rx="90" ry="24" fill="#0a1220"/>
+      <rect x="40" y="80" width="140" height="120" rx="26" fill="#111a26"/>
+      <circle cx="110" cy="120" r="28" fill="url(#neonCyan)"/>
+      <circle cx="110" cy="120" r="68" fill="none" stroke="url(#neonAmber)" stroke-width="10"/>
+      <rect x="16" y="140" width="28" height="120" rx="14" fill="url(#neonCyan)"/>
+      <rect x="176" y="140" width="28" height="120" rx="14" fill="url(#neonCyan)"/>
+    </g>
+  </g>
+</svg>

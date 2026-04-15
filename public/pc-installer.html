@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instalador PC | Bot Breaker 3D</title>
+    <style>
+      :root {
+        --bg: #050816;
+        --panel: #0b162b;
+        --accent: #5cf2ff;
+        --text: #eef4ff;
+        --muted: #9cb6d8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top right, rgba(92, 242, 255, 0.16), transparent 34%),
+          linear-gradient(160deg, #081426, var(--bg));
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+      .card {
+        width: min(760px, 100%);
+        border-radius: 18px;
+        border: 1px solid rgba(120, 180, 255, 0.26);
+        background: rgba(11, 22, 43, 0.9);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.34);
+        padding: 20px;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      p { color: var(--muted); line-height: 1.55; }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .btn {
+        border: 1px solid rgba(120, 180, 255, 0.32);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .btn.primary {
+        border-color: rgba(92, 242, 255, 0.62);
+        background: linear-gradient(135deg, rgba(92, 242, 255, 0.32), rgba(141, 249, 255, 0.18));
+        color: #f4fbff;
+      }
+      .btn[aria-disabled="true"] {
+        opacity: 0.45;
+        pointer-events: none;
+        filter: saturate(0.7);
+      }
+      .status {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(120, 180, 255, 0.24);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .status.ready {
+        border-color: rgba(124, 255, 145, 0.45);
+        color: #c9ffd9;
+      }
+      .status.missing {
+        border-color: rgba(255, 184, 90, 0.45);
+        color: #ffd9a8;
+      }
+      ol {
+        margin: 14px 0 0;
+        padding-left: 20px;
+        color: var(--text);
+      }
+      li { margin-top: 8px; }
+      code {
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Bot Breaker 3D Installer</h1>
+      <p>
+        Esta pagina descarga el instalador para Windows. El instalador es un wizard (siguiente,
+        siguiente, instalar) y deja el juego instalado en tu PC.
+      </p>
+
+      <div class="actions">
+        <a id="download-setup" class="btn primary" href="/installer-output/BotBreakerSetup.exe" download>
+          Descargar Setup.exe
+        </a>
+        <a class="btn" href="/">Volver al juego</a>
+      </div>
+      <p id="installer-status" class="status">Verificando instalador...</p>
+
+      <ol>
+        <li>Descarga <code>BotBreakerSetup.exe</code>.</li>
+        <li>Abre el archivo y acepta permisos de Windows.</li>
+        <li>Completa el wizard de instalacion.</li>
+        <li>Abre Bot Breaker 3D desde el acceso directo creado.</li>
+      </ol>
+
+      <p>
+        Si aun no existe el <code>Setup.exe</code>, generarlo en esta carpeta con
+        <code>crear-setup-pc.bat</code>.
+      </p>
+    </main>
+    <script>
+      (async () => {
+        const statusEl = document.getElementById("installer-status");
+        const downloadBtn = document.getElementById("download-setup");
+        const setupUrl = "/installer-output/BotBreakerSetup.exe";
+
+        function setMissingStatus(message) {
+          statusEl.textContent = message;
+          statusEl.classList.remove("ready");
+          statusEl.classList.add("missing");
+          downloadBtn.setAttribute("aria-disabled", "true");
+          downloadBtn.removeAttribute("href");
+        }
+
+        try {
+          const response = await fetch(setupUrl, { cache: "no-store" });
+          if (!response.ok) {
+            setMissingStatus("No hay setup generado todavia. Ejecuta crear-setup-pc.bat.");
+            return;
+          }
+
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          const isExe = bytes.length > 2 && bytes[0] === 0x4d && bytes[1] === 0x5a;
+          if (!isExe) {
+            setMissingStatus(
+              "El setup aun no existe o el servidor devolvio una pagina HTML. Genera el setup con crear-setup-pc.bat.",
+            );
+            return;
+          }
+
+          statusEl.textContent = "Setup detectado. Descarga segura lista.";
+          statusEl.classList.remove("missing");
+          statusEl.classList.add("ready");
+          downloadBtn.setAttribute("href", setupUrl);
+          downloadBtn.removeAttribute("aria-disabled");
+        } catch (error) {
+          setMissingStatus("No se pudo validar el setup. Intenta recargar esta pagina.");
+        }
+      })();
+    </script>
+  </body>
+</html>

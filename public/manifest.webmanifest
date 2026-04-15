@@ -1,0 +1,19 @@
+{
+  "name": "Bot Breaker 3D",
+  "short_name": "BotBreaker",
+  "description": "Shooter de oleadas 3D con bosses y mundos desbloqueables.",
+  "lang": "es-NI",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#08101f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

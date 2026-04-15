@@ -1,0 +1,1 @@
+Coloca aqui BotBreakerSetup.exe generado por Inno Setup.
