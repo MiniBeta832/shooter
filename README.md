@@ -53,6 +53,20 @@ El script compila el wizard, aplica firma Authenticode con timestamp y valida la
 
 Nota importante: sin certificado valido, SmartScreen puede seguir marcando el instalador como no reconocido.
 
+## SHA-256 del Setup.exe
+
+Hash actual de `BotBreakerSetup.exe`:
+
+```text
+DB0A53590E53F1C9ADA4271E065B5AF7541AE95B9D8C02AFF82226A25EE36163
+```
+
+Verificar en Windows (PowerShell):
+
+```powershell
+Get-FileHash -Algorithm SHA256 .\BotBreakerSetup.exe
+```
+
 ## Controles
 
 - `WASD`: mover
