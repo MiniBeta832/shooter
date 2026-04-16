@@ -4,35 +4,41 @@ setlocal
 cd /d "%~dp0"
 set "PORT=4173"
 set "APP_URL=http://127.0.0.1:%PORT%"
+set "DIST_PATH=%~dp0dist"
+set "SERVER_SCRIPT=%~dp0servidor-local.ps1"
+set "INDEX_PATH=%~dp0index.html"
 
-where npm.cmd >nul 2>nul
-if errorlevel 1 (
-  echo No se encontro npm.cmd. Se abrira en modo archivo local.
-  set "INDEX_PATH=%~dp0dist\index.html"
-  if not exist "%INDEX_PATH%" set "INDEX_PATH=%~dp0index.html"
+if not exist "%DIST_PATH%\index.html" (
   if not exist "%INDEX_PATH%" (
     echo No se encontro index.html en la carpeta del juego.
     pause
     exit /b 1
   )
+  echo No se encontro carpeta dist. Se abrira modo archivo local.
   set "INDEX_URI=file:///%INDEX_PATH:\=/%"
   goto open_app_window
 )
 
-if not exist "node_modules\vite" (
-  echo Instalando dependencias del juego...
-  call npm.cmd install
-  if errorlevel 1 (
-    echo No se pudieron instalar las dependencias.
-    pause
-    exit /b 1
-  )
+if not exist "%SERVER_SCRIPT%" (
+  echo No se encontro servidor-local.ps1. Se abrira modo archivo local.
+  if not exist "%INDEX_PATH%" set "INDEX_PATH=%DIST_PATH%\index.html"
+  set "INDEX_URI=file:///%INDEX_PATH:\=/%"
+  goto open_app_window
 )
 
 echo Iniciando Bot Breaker 3D en localhost...
-start "Bot Breaker 3D Server" cmd /k "cd /d ""%~dp0"" && npm.cmd run dev -- --host 127.0.0.1 --port %PORT% --strictPort"
+start "Bot Breaker 3D Localhost" powershell -NoProfile -ExecutionPolicy Bypass -File "%SERVER_SCRIPT%" -Port %PORT% -Root "%DIST_PATH%"
 
-timeout /t 4 /nobreak >nul
+for /l %%I in (1,1,25) do (
+  powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri '%APP_URL%' -Method Head -UseBasicParsing -TimeoutSec 1; exit 0 } catch { exit 1 }"
+  if not errorlevel 1 goto open_app_window
+  timeout /t 1 /nobreak >nul
+)
+
+echo No se pudo levantar localhost. Se abrira modo archivo local.
+set "INDEX_PATH=%DIST_PATH%\index.html"
+if not exist "%INDEX_PATH%" set "INDEX_PATH=%~dp0index.html"
+set "INDEX_URI=file:///%INDEX_PATH:\=/%"
 
 :open_app_window
 echo Abriendo Bot Breaker 3D en ventana de aplicacion...

@@ -34,6 +34,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\dist\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs; Excludes: "installer-output\*"
 Source: "..\abrir-juego.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\abrir-juego-app.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\servidor-local.ps1"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\Bot Breaker 3D"; Filename: "{app}\{#AppExeName}"

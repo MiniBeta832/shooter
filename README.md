@@ -58,7 +58,7 @@ Nota importante: sin certificado valido, SmartScreen puede seguir marcando el in
 Hash actual de `BotBreakerSetup.exe`:
 
 ```text
-F459BEB6E8B62DCF75B5F38D90499AE45D571ECB534D4F3C002F745425DA7AE4
+AFF1BDAD6A796778CDB4C024EA282B8E1035ADC6B43A771DBA905C59DA42D6CC
 ```
 
 Verificar en Windows (PowerShell):
