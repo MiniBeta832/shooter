@@ -5,6 +5,7 @@ cd /d "%~dp0"
 set "PORT=4173"
 set "APP_URL=http://127.0.0.1:%PORT%"
 set "ROOT_PATH=%~dp0"
+if exist "%~dp0dist\index.html" set "ROOT_PATH=%~dp0dist"
 set "SERVER_SCRIPT=%~dp0servidor-local.ps1"
 set "INDEX_PATH=%~dp0index.html"
 
@@ -24,7 +25,7 @@ echo Iniciando Bot Breaker 3D en localhost...
 start "Bot Breaker 3D Localhost" powershell -NoProfile -ExecutionPolicy Bypass -File "%SERVER_SCRIPT%" -Port %PORT% -Root "%ROOT_PATH%"
 
 for /l %%I in (1,1,25) do (
-  powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri '%APP_URL%' -Method Head -UseBasicParsing -TimeoutSec 1; exit 0 } catch { exit 1 }"
+  curl.exe -s --max-time 1 "%APP_URL%" >nul 2>nul
   if not errorlevel 1 goto open_app_window
   timeout /t 1 /nobreak >nul
 )
