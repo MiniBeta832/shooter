@@ -2,12 +2,11 @@
 setlocal
 
 cd /d "%~dp0"
-set "PORT=4173"
-set "APP_URL=http://127.0.0.1:%PORT%"
 set "ROOT_PATH=%~dp0"
 if exist "%~dp0dist\index.html" set "ROOT_PATH=%~dp0dist"
 set "SERVER_SCRIPT=%~dp0servidor-local.ps1"
 set "INDEX_PATH=%~dp0index.html"
+set "PORT_FILE=%TEMP%\bot-breaker-port-%RANDOM%-%RANDOM%.txt"
 
 if not exist "%INDEX_PATH%" (
   echo No se encontro index.html en la carpeta del juego.
@@ -20,6 +19,15 @@ if not exist "%SERVER_SCRIPT%" (
   set "INDEX_URI=file:///%INDEX_PATH:\=/%"
   goto open_app_window
 )
+
+for /f "usebackq delims=" %%I in (`powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'powershell.exe' -and $_.CommandLine -like '*%SERVER_SCRIPT%*' } | Select-Object -ExpandProperty ProcessId"`) do (
+  taskkill /PID %%I /T /F >nul 2>nul
+)
+
+for /f "usebackq delims=" %%P in (`powershell -NoProfile -Command "$l=New-Object Net.Sockets.TcpListener([Net.IPAddress]::Loopback,0);$l.Start();$p=$l.LocalEndpoint.Port;$l.Stop();$p"`) do set "PORT=%%P"
+if not defined PORT set "PORT=4173"
+set "APP_URL=http://127.0.0.1:%PORT%"
+echo %PORT%>"%PORT_FILE%"
 
 echo Iniciando Bot Breaker 3D en localhost...
 start "Bot Breaker 3D Localhost" powershell -NoProfile -ExecutionPolicy Bypass -File "%SERVER_SCRIPT%" -Port %PORT% -Root "%ROOT_PATH%"
@@ -43,6 +51,7 @@ set "EDGE=%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe"
 if not exist "%EDGE%" set "EDGE=%ProgramFiles%\Microsoft\Edge\Application\msedge.exe"
 if exist "%EDGE%" (
   start "" "%EDGE%" --app="%TARGET%"
+  if exist "%PORT_FILE%" del /q "%PORT_FILE%" >nul 2>nul
   exit /b 0
 )
 
@@ -50,6 +59,7 @@ set "CHROME=%ProgramFiles%\Google\Chrome\Application\chrome.exe"
 if not exist "%CHROME%" set "CHROME=%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe"
 if exist "%CHROME%" (
   start "" "%CHROME%" --app="%TARGET%"
+  if exist "%PORT_FILE%" del /q "%PORT_FILE%" >nul 2>nul
   exit /b 0
 )
 
@@ -60,4 +70,5 @@ if defined INDEX_URI (
   start "" "%APP_URL%"
 )
 
+if exist "%PORT_FILE%" del /q "%PORT_FILE%" >nul 2>nul
 exit /b 0
