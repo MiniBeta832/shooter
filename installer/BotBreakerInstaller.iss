@@ -1,7 +1,7 @@
 #define AppName "Bot Breaker 3D"
 #define AppVersion "0.1.0"
 #define AppPublisher "betar"
-#define AppExeName "abrir-juego.bat"
+#define AppExeName "abrir-juego-app.bat"
 #define AppUrl "https://github.com/MiniBeta832/shooter"
 
 [Setup]
@@ -33,6 +33,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "..\dist\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs; Excludes: "installer-output\*"
 Source: "..\abrir-juego.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\abrir-juego-app.bat"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\Bot Breaker 3D"; Filename: "{app}\{#AppExeName}"
