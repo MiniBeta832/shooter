@@ -4,6 +4,15 @@ param(
 
 Add-Type -AssemblyName System.Drawing
 
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public static class NativeMethods {
+  [DllImport("user32.dll", SetLastError=true)]
+  public static extern bool DestroyIcon(IntPtr hIcon);
+}
+"@
+
 function New-GradientBrush {
   param(
     [System.Drawing.Rectangle]$Rect,
@@ -108,6 +117,52 @@ function New-WizardSmallImage {
   }
 }
 
+function New-InstallerIcon {
+  param([string]$Path)
+
+  $size = 256
+  $bmp = New-Object System.Drawing.Bitmap($size, $size)
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+  $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::ClearTypeGridFit
+
+  try {
+    $rect = New-Object System.Drawing.Rectangle(0, 0, $size, $size)
+    $bgBrush = New-GradientBrush -Rect $rect -TopColor ([System.Drawing.Color]::FromArgb(255, 7, 20, 38)) -BottomColor ([System.Drawing.Color]::FromArgb(255, 4, 10, 20))
+    $g.FillRectangle($bgBrush, $rect)
+    $bgBrush.Dispose()
+
+    $ringPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(225, 92, 242, 255), 16)
+    $g.DrawEllipse($ringPen, 28, 28, 200, 200)
+    $ringPen.Dispose()
+
+    $font = New-Object System.Drawing.Font("Arial Black", 72, [System.Drawing.FontStyle]::Bold)
+    $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(238, 244, 255))
+    $g.DrawString("BB", $font, $brush, 40, 74)
+    $font.Dispose()
+    $brush.Dispose()
+
+    $hIcon = $bmp.GetHicon()
+    try {
+      $icon = [System.Drawing.Icon]::FromHandle($hIcon)
+      $fs = [System.IO.File]::Open($Path, [System.IO.FileMode]::Create)
+      try {
+        $icon.Save($fs)
+      }
+      finally {
+        $fs.Dispose()
+      }
+    }
+    finally {
+      [NativeMethods]::DestroyIcon($hIcon) | Out-Null
+    }
+  }
+  finally {
+    $g.Dispose()
+    $bmp.Dispose()
+  }
+}
+
 if (!(Test-Path $OutputDir)) {
   New-Item -ItemType Directory -Path $OutputDir | Out-Null
 }
@@ -118,6 +173,7 @@ $briefingPath = Join-Path $OutputDir "wizard-briefing.bmp"
 $installPath = Join-Path $OutputDir "wizard-install.bmp"
 $finishPath = Join-Path $OutputDir "wizard-finish.bmp"
 $smallPath = Join-Path $OutputDir "wizard-small.bmp"
+$iconPath = Join-Path $OutputDir "installer-icon.ico"
 
 New-WizardLargeImage -Path $largePath -PhaseTitle "Prototype Build" -PhaseSubtitle "Welcome Sequence"
 New-WizardLargeImage -Path $welcomePath -PhaseTitle "Prototype Build" -PhaseSubtitle "Welcome Sequence"
@@ -125,6 +181,7 @@ New-WizardLargeImage -Path $briefingPath -PhaseTitle "Combat Briefing" -PhaseSub
 New-WizardLargeImage -Path $installPath -PhaseTitle "Deploying Build" -PhaseSubtitle "Installing Arena"
 New-WizardLargeImage -Path $finishPath -PhaseTitle "System Online" -PhaseSubtitle "Ready To Fight"
 New-WizardSmallImage -Path $smallPath
+New-InstallerIcon -Path $iconPath
 
 Write-Output "Assets generados:"
 Write-Output $largePath
@@ -133,3 +190,4 @@ Write-Output $briefingPath
 Write-Output $installPath
 Write-Output $finishPath
 Write-Output $smallPath
+Write-Output $iconPath

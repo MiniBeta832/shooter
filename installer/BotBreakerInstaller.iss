@@ -20,8 +20,7 @@ OutputBaseFilename=BotBreakerSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-WizardImageFile=wizard-large.bmp
-WizardSmallImageFile=wizard-small.bmp
+SetupIconFile=installer-icon.ico
 PrivilegesRequired=lowest
 DisableDirPage=no
 DisableProgramGroupPage=no
@@ -34,10 +33,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "..\dist\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs; Excludes: "installer-output\*"
 Source: "..\abrir-juego.bat"; DestDir: "{app}"; Flags: ignoreversion
-Source: "wizard-welcome.bmp"; Flags: dontcopy
-Source: "wizard-briefing.bmp"; Flags: dontcopy
-Source: "wizard-install.bmp"; Flags: dontcopy
-Source: "wizard-finish.bmp"; Flags: dontcopy
 
 [Icons]
 Name: "{group}\Bot Breaker 3D"; Filename: "{app}\{#AppExeName}"
@@ -52,41 +47,15 @@ Filename: "{app}\{#AppExeName}"; Description: "Abrir Bot Breaker 3D"; Flags: now
 [Code]
 var
   LorePage: TWizardPage;
-  LoreBackground: TBitmapImage;
-  WizardWelcomeArt: string;
-  WizardBriefingArt: string;
-  WizardInstallArt: string;
-  WizardFinishArt: string;
-
-procedure UpdateWizardArt(CurPageID: Integer);
-var
-  ArtPath: string;
-begin
-  ArtPath := WizardInstallArt;
-
-  if CurPageID = wpWelcome then
-    ArtPath := WizardWelcomeArt
-  else if CurPageID = LorePage.ID then
-    ArtPath := WizardBriefingArt
-  else if CurPageID = wpFinished then
-    ArtPath := WizardFinishArt
-  else if CurPageID = wpInstalling then
-    ArtPath := WizardInstallArt;
-
-  if FileExists(ArtPath) then
-    WizardForm.WizardBitmapImage.Bitmap.LoadFromFile(ArtPath);
-end;
-
-procedure CurPageChanged(CurPageID: Integer);
-begin
-  UpdateWizardArt(CurPageID);
-end;
+  LoreText: TNewStaticText;
+  LoreHint: TNewStaticText;
 
 procedure InitializeWizard;
 begin
-  WizardForm.Color := $00160805;
+  WizardForm.Color := $00000000;
   WizardForm.PageNameLabel.Font.Color := $00F4F0EA;
   WizardForm.PageDescriptionLabel.Font.Color := $00E3D0C1;
+  WizardForm.WizardBitmapImage.Visible := False;
 
   if ActiveLanguage = 'spanish' then
   begin
@@ -112,26 +81,34 @@ begin
     'Briefing de despliegue',
     'Tu run comienza antes de entrar a la arena.'
   );
+  LorePage.Surface.Color := $00000000;
 
-  ExtractTemporaryFile('wizard-welcome.bmp');
-  ExtractTemporaryFile('wizard-briefing.bmp');
-  ExtractTemporaryFile('wizard-install.bmp');
-  ExtractTemporaryFile('wizard-finish.bmp');
+  LoreText := TNewStaticText.Create(LorePage);
+  LoreText.Parent := LorePage.Surface;
+  LoreText.Left := ScaleX(12);
+  LoreText.Top := ScaleY(14);
+  LoreText.Width := LorePage.SurfaceWidth - ScaleX(24);
+  LoreText.Height := ScaleY(186);
+  LoreText.AutoSize := False;
+  LoreText.WordWrap := True;
+  LoreText.Font.Style := [fsBold];
+  LoreText.Font.Size := 10;
+  LoreText.Font.Color := $00F2F2F2;
+  LoreText.Caption :=
+    'Estado: DESPLIEGUE LISTO' + #13#10 + #13#10 +
+    'Supervive oleadas, junta monedas y derriba bosses en la arena.' + #13#10 +
+    'Este instalador deja BOT BREAKER 3D listo para jugar en tu PC.' + #13#10 + #13#10 +
+    'Si SmartScreen aparece, usa "Mas informacion" y luego "Ejecutar de todas formas".';
 
-  WizardWelcomeArt := ExpandConstant('{tmp}\wizard-welcome.bmp');
-  WizardBriefingArt := ExpandConstant('{tmp}\wizard-briefing.bmp');
-  WizardInstallArt := ExpandConstant('{tmp}\wizard-install.bmp');
-  WizardFinishArt := ExpandConstant('{tmp}\wizard-finish.bmp');
-
-  LoreBackground := TBitmapImage.Create(LorePage);
-  LoreBackground.Parent := LorePage.Surface;
-  LoreBackground.Left := 0;
-  LoreBackground.Top := 0;
-  LoreBackground.Width := LorePage.SurfaceWidth;
-  LoreBackground.Height := LorePage.SurfaceHeight;
-  LoreBackground.Stretch := True;
-  LoreBackground.Anchors := [akLeft, akTop, akRight, akBottom];
-  LoreBackground.Bitmap.LoadFromFile(WizardBriefingArt);
-
-  UpdateWizardArt(wpWelcome);
+  LoreHint := TNewStaticText.Create(LorePage);
+  LoreHint.Parent := LorePage.Surface;
+  LoreHint.Left := ScaleX(12);
+  LoreHint.Top := LoreText.Top + LoreText.Height + ScaleY(8);
+  LoreHint.Width := LorePage.SurfaceWidth - ScaleX(24);
+  LoreHint.Height := ScaleY(52);
+  LoreHint.AutoSize := False;
+  LoreHint.WordWrap := True;
+  LoreHint.Font.Color := $00AAAAAA;
+  LoreHint.Caption :=
+    'Tip: termina la instalacion y abre BOT BREAKER 3D desde el acceso directo.';
 end;
