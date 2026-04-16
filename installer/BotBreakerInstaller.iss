@@ -52,7 +52,7 @@ var
 
 procedure InitializeWizard;
 begin
-  WizardForm.Color := $00000000;
+  WizardForm.Color := $002A143A;
   WizardForm.PageNameLabel.Font.Color := $00F4F0EA;
   WizardForm.PageDescriptionLabel.Font.Color := $00E3D0C1;
   WizardForm.WizardBitmapImage.Visible := False;
@@ -81,7 +81,7 @@ begin
     'Briefing de despliegue',
     'Tu run comienza antes de entrar a la arena.'
   );
-  LorePage.Surface.Color := $00000000;
+  LorePage.Surface.Color := $002A143A;
 
   LoreText := TNewStaticText.Create(LorePage);
   LoreText.Parent := LorePage.Surface;
