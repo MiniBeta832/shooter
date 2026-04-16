@@ -4,30 +4,24 @@ setlocal
 cd /d "%~dp0"
 set "PORT=4173"
 set "APP_URL=http://127.0.0.1:%PORT%"
-set "DIST_PATH=%~dp0dist"
+set "ROOT_PATH=%~dp0"
 set "SERVER_SCRIPT=%~dp0servidor-local.ps1"
 set "INDEX_PATH=%~dp0index.html"
 
-if not exist "%DIST_PATH%\index.html" (
-  if not exist "%INDEX_PATH%" (
-    echo No se encontro index.html en la carpeta del juego.
-    pause
-    exit /b 1
-  )
-  echo No se encontro carpeta dist. Se abrira modo archivo local.
-  set "INDEX_URI=file:///%INDEX_PATH:\=/%"
-  goto open_app_window
+if not exist "%INDEX_PATH%" (
+  echo No se encontro index.html en la carpeta del juego.
+  pause
+  exit /b 1
 )
 
 if not exist "%SERVER_SCRIPT%" (
   echo No se encontro servidor-local.ps1. Se abrira modo archivo local.
-  if not exist "%INDEX_PATH%" set "INDEX_PATH=%DIST_PATH%\index.html"
   set "INDEX_URI=file:///%INDEX_PATH:\=/%"
   goto open_app_window
 )
 
 echo Iniciando Bot Breaker 3D en localhost...
-start "Bot Breaker 3D Localhost" powershell -NoProfile -ExecutionPolicy Bypass -File "%SERVER_SCRIPT%" -Port %PORT% -Root "%DIST_PATH%"
+start "Bot Breaker 3D Localhost" powershell -NoProfile -ExecutionPolicy Bypass -File "%SERVER_SCRIPT%" -Port %PORT% -Root "%ROOT_PATH%"
 
 for /l %%I in (1,1,25) do (
   powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri '%APP_URL%' -Method Head -UseBasicParsing -TimeoutSec 1; exit 0 } catch { exit 1 }"
@@ -36,8 +30,6 @@ for /l %%I in (1,1,25) do (
 )
 
 echo No se pudo levantar localhost. Se abrira modo archivo local.
-set "INDEX_PATH=%DIST_PATH%\index.html"
-if not exist "%INDEX_PATH%" set "INDEX_PATH=%~dp0index.html"
 set "INDEX_URI=file:///%INDEX_PATH:\=/%"
 
 :open_app_window
