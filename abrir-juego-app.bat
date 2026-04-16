@@ -2,7 +2,8 @@
 setlocal
 
 cd /d "%~dp0"
-set "INDEX_PATH=%~dp0index.html"
+set "INDEX_PATH=%~dp0dist\index.html"
+if not exist "%INDEX_PATH%" set "INDEX_PATH=%~dp0index.html"
 set "INDEX_URI=file:///%INDEX_PATH:\=/%"
 
 if not exist "%INDEX_PATH%" (
