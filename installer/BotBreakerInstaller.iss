@@ -53,8 +53,6 @@ Filename: "{app}\{#AppExeName}"; Description: "Abrir Bot Breaker 3D"; Flags: now
 var
   LorePage: TWizardPage;
   LoreBackground: TBitmapImage;
-  LoreText: TNewStaticText;
-  LoreHint: TNewStaticText;
   WizardWelcomeArt: string;
   WizardBriefingArt: string;
   WizardInstallArt: string;
@@ -134,35 +132,6 @@ begin
   LoreBackground.Stretch := True;
   LoreBackground.Anchors := [akLeft, akTop, akRight, akBottom];
   LoreBackground.Bitmap.LoadFromFile(WizardBriefingArt);
-
-  LoreText := TNewStaticText.Create(LorePage);
-  LoreText.Parent := LorePage.Surface;
-  LoreText.Left := ScaleX(12);
-  LoreText.Top := ScaleY(12);
-  LoreText.Width := LorePage.SurfaceWidth - ScaleX(24);
-  LoreText.Height := ScaleY(190);
-  LoreText.AutoSize := False;
-  LoreText.WordWrap := True;
-  LoreText.Font.Style := [fsBold];
-  LoreText.Font.Size := 10;
-  LoreText.Font.Color := $00FFF4EE;
-  LoreText.Caption :=
-    'Estado: PREPARANDO DESPLIEGUE' + #13#10 + #13#10 +
-    'Tu objetivo es sobrevivir oleadas, farmear monedas y derrotar bosses.' + #13#10 +
-    'Este wizard instalara la build tactica en tu PC y dejara acceso directo listo.' + #13#10 + #13#10 +
-    'Tip de comandante: si SmartScreen aparece, usa "Mas informacion" y luego "Ejecutar de todas formas".';
-
-  LoreHint := TNewStaticText.Create(LorePage);
-  LoreHint.Parent := LorePage.Surface;
-  LoreHint.Left := ScaleX(12);
-  LoreHint.Top := LoreText.Top + LoreText.Height + ScaleY(8);
-  LoreHint.Width := LorePage.SurfaceWidth - ScaleX(24);
-  LoreHint.Height := ScaleY(48);
-  LoreHint.AutoSize := False;
-  LoreHint.WordWrap := True;
-  LoreHint.Font.Color := $00FFF95C;
-  LoreHint.Caption :=
-    'Build Prototype: instala primero y luego abre BOT BREAKER 3D desde el acceso directo.';
 
   UpdateWizardArt(wpWelcome);
 end;
